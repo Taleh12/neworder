@@ -43,8 +43,8 @@ class OrderObserver
             $newStatusValue = $order->status instanceof \BackedEnum
                 ? $order->status->value
                 : (string) $order->status;
-
-            $oldEnum = OrderStatus::tryFrom($oldStatusValue);
+$oldStatusValue = $oldStatusValue instanceof OrderStatus ? $oldStatusValue->value : $oldStatusValue;
+$oldEnum = OrderStatus::tryFrom($oldStatusValue);
             $newEnum = OrderStatus::tryFrom($newStatusValue);
 
             $action = match (true) {

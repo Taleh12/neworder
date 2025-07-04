@@ -67,12 +67,10 @@ class OrderController extends BaseController
             'notes' => $request->notes,
             'expected_delivery_date' => $request->expected_delivery_date,
             'attachment' => $attachmentPath,
-            'status' => OrderStatus::DRAFT->value, // Enum-un string dəyəri
+            'status' => OrderStatus::Draft, // Enum-un string dəyəri
         ]);
 
-        if (!$order->canBeApprovedBy($user)) {
-            return response()->json(['message' => 'Sifariş yaratmaq üçün icazəniz yoxdur'], 403);
-        }
+
 
         return response()->json([
             'message' => 'Sifariş yaradıldı',

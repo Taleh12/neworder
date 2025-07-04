@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 class Order extends Model
 {
 
-    use HasRoles;
+
      protected $fillable = [
         'user_id',
         'product_id',
@@ -85,15 +85,7 @@ class Order extends Model
 
         $this->save();
 
-        // ApprovalLog əlavə et
-        ApprovalLog::create([
-            'order_id' => $this->id,
-            'user_id' => Auth::id(),
-            'from_status' => $this->status->value,
-            'to_status' => $this->status->value,
-            'action' => 'approved',
-            'comment' => request()->input('comment'),
-        ]);
+
 
         return true;
     }
@@ -119,14 +111,7 @@ class Order extends Model
         $this->status = $previousStatus;
         $this->save();
 
-        ApprovalLog::create([
-            'order_id' => $this->id,
-            'user_id' => Auth::id(),
-            'from_status' => $oldStatus->value,
-            'to_status' => $previousStatus->value,
-            'action' => 'returned',
-            'comment' => $comment,
-        ]);
+
 
         return true;
     }
@@ -146,14 +131,7 @@ class Order extends Model
         $this->status = OrderStatus::Rejected;
         $this->save();
 
-        ApprovalLog::create([
-            'order_id' => $this->id,
-            'user_id' => Auth::id(),
-            'from_status' => $oldStatus->value,
-            'to_status' => OrderStatus::Rejected->value,
-            'action' => 'rejected',
-            'comment' => $comment,
-        ]);
+
 
         return true;
     }
@@ -192,5 +170,20 @@ class Order extends Model
         $pos = array_search($this->status, $all);
 
         return ($pos !== false && $pos > 0) ? $all[$pos - 1] : null;
+    }
+
+   public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+     public function brand()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
